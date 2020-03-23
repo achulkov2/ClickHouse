@@ -168,10 +168,11 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
     }
     return found;
     */
-    bool found = false;
+    // bool found = false;
     auto cell = grid.find(point.get<0>(), point.get<1>());
     if (cell)
     {
+        /*
         for (size_t i = 0; i < (cell->polygon_ids).size(); ++i)
         {
             const auto & candidate = (cell->polygon_ids)[i];
@@ -183,8 +184,18 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
                 break;
             }
         }
+        */
+        size_t candidate;
+        if (cell->is_covered_by > 0 && cell->buckets.find(point, candidate)) {
+            id = (cell->polygon_ids)[candidate];
+            return true;
+        }
+        if (cell->is_covered_by < cell->polygon_ids.size()) {
+            id = (cell->polygon_ids)[cell->is_covered_by];
+            return true;
+        }
     }
-    return found;
+    return false;
 }
 
 OneBucketPolygonDictionary::OneBucketPolygonDictionary(

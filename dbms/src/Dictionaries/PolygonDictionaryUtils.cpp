@@ -11,14 +11,27 @@ namespace DB
 {
 
 FinalCell::FinalCell(std::vector<size_t> polygon_ids_, const std::vector<Polygon> & polygons_, const Box & box_):
-polygon_ids(std::move(polygon_ids_))
+polygon_ids(std::move(polygon_ids_)), is_covered_by(0)
 {
     Polygon tmp_poly;
     bg::convert(box_, tmp_poly);
-    std::transform(polygon_ids.begin(), polygon_ids.end(), std::back_inserter(is_covered_by), [&](const auto id)
+    /*
+    std::transform(polygon_ids.begin(), polygon_ids.end(), is_covered_by.begin(), [&](const auto id)
     {
         return bg::covered_by(tmp_poly, polygons_[id]);
     });
+    */
+    std::vector<Polygon> interesting;
+    for (size_t id : polygon_ids)
+    {
+        if (bg::covered_by(tmp_poly, polygons_[id])) {
+            break;
+        } else {
+            ++is_covered_by;
+            interesting.push_back(polygons_[id]);
+        }
+    }
+    buckets = BucketsPolygonIndex(interesting);
 }
 
 const FinalCell * FinalCell::find(Float64, Float64) const
