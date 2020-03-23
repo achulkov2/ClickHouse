@@ -91,6 +91,7 @@ std::shared_ptr<const IExternalLoadable> GridPolygonDictionary::clone() const
 bool GridPolygonDictionary::find(const Point &point, size_t & id) const
 {
     bool found = false;
+    /*
     auto cell = grid.find(point.get<0>(), point.get<1>());
     if (cell)
     {
@@ -105,6 +106,7 @@ bool GridPolygonDictionary::find(const Point &point, size_t & id) const
             }
         }
     }
+    */
     return found;
 }
 
