@@ -91,12 +91,13 @@ std::shared_ptr<const IExternalLoadable> GridPolygonDictionary::clone() const
 bool GridPolygonDictionary::find(const Point &point, size_t & id) const
 {
     bool found = false;
-    /*
     auto cell = grid.find(point.get<0>(), point.get<1>());
     if (cell)
     {
         for (size_t i = 0; i < (cell->polygon_ids).size(); ++i)
         {
+            id = 5;
+            /*
             const auto & candidate = (cell->polygon_ids)[i];
             if ((cell->is_covered_by)[i] || bg::covered_by(point, polygons[candidate]))
             {
@@ -104,9 +105,9 @@ bool GridPolygonDictionary::find(const Point &point, size_t & id) const
                 id = candidate;
                 break;
             }
+            */
         }
     }
-    */
     return found;
 }
 
