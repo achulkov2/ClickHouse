@@ -114,6 +114,7 @@ public:
     explicit FinalCell(std::vector<size_t> polygon_ids_, const std::vector<Polygon> & polygons_, const Box & box_);
     std::vector<size_t> polygon_ids;
     size_t is_covered_by;
+    std::vector<size_t> iids;
     BucketsPolygonIndex buckets;
 
 private:
@@ -141,8 +142,8 @@ public:
     [[nodiscard]] const FinalCell * find(Float64 x, Float64 y) const override;
 
     /** When a cell is split every side is split into kSplit pieces producing kSplit * kSplit equal smaller cells. */
-    static constexpr size_t kSplit = 4;
-    static constexpr size_t kMultiProcessingDepth = 2;
+    static constexpr size_t kSplit = 500;
+    static constexpr size_t kMultiProcessingDepth = 1;
 
 private:
     std::unique_ptr<ICell> root = nullptr;

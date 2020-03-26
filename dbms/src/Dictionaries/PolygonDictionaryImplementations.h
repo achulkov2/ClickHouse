@@ -79,7 +79,7 @@ private:
     std::vector<BucketsPolygonIndex> buckets;
     GridRoot grid;
     static constexpr size_t kMinIntersections = 1;
-    static constexpr size_t kMaxDepth = 5;
+    static constexpr size_t kMaxDepth = 1;
 };
 
 /** Uses single BucketsPolygonIndex for all queries. */

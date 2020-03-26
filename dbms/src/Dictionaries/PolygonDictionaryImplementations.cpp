@@ -129,6 +129,7 @@ SmartPolygonDictionary::SmartPolygonDictionary(
         return areas[lhs] < areas[rhs];
     });
     grid.init(order);
+    /*
     auto log = &Logger::get("BucketsPolygonIndex");
     buckets.reserve(polygons.size());
     for (size_t i = 0; i < polygons.size(); ++i)
@@ -136,6 +137,7 @@ SmartPolygonDictionary::SmartPolygonDictionary(
         buckets.emplace_back(std::vector<Polygon>{polygons[i]});
         LOG_TRACE(log, "Finished polygon" << i);
     }
+    */
 }
 
 std::shared_ptr<const IExternalLoadable> SmartPolygonDictionary::clone() const
@@ -190,7 +192,7 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
         */
         size_t candidate;
         if (cell->is_covered_by > 0 && cell->buckets.find(point, candidate)) {
-            id = (cell->polygon_ids)[candidate];
+            id = (cell->iids)[candidate];
             return true;
         }
         if (cell->is_covered_by < cell->polygon_ids.size()) {

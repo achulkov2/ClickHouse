@@ -28,7 +28,11 @@ polygon_ids(std::move(polygon_ids_)), is_covered_by(0)
             break;
         } else {
             ++is_covered_by;
-            interesting.push_back(polygons_[id]);
+            auto sz = interesting.size();
+	    bg::intersection(polygons_[id], tmp_poly, interesting);
+	    for (auto i = sz; i < interesting.size(); ++i) {
+	        iids.push_back(id);
+	    }   	
         }
     }
     buckets = BucketsPolygonIndex(interesting);
@@ -164,7 +168,7 @@ std::vector<Float64> BucketsPolygonIndex::uniqueX(const std::vector<Polygon> & p
     std::sort(all_x.begin(), all_x.end());
     all_x.erase(std::unique(all_x.begin(), all_x.end()), all_x.end());
 
-    LOG_TRACE(log, "Found " << all_x.size() << " unique x coordinates");
+    // LOG_TRACE(log, "Found " << all_x.size() << " unique x coordinates");
 
     return all_x;
 }
@@ -191,7 +195,7 @@ void BucketsPolygonIndex::indexBuild(const std::vector<Polygon> & polygons)
     /** total number of edges */
     size_t m = this->all_edges.size();
 
-    LOG_TRACE(log, "Just sorted " << all_edges.size() << " edges from all " << polygons.size() << " polygons");
+    // LOG_TRACE(log, "Just sorted " << all_edges.size() << " edges from all " << polygons.size() << " polygons");
 
     /** using custom comparator for fetching edges in right_point order, like in scanline */
     auto cmp = [](const Edge & a, const Edge & b)
@@ -232,10 +236,12 @@ void BucketsPolygonIndex::indexBuild(const std::vector<Polygon> & polygons)
             edge_left[this->all_edges[edges_it].edge_id] = l;
         }
 
+	/*
         if (l % 1000 == 0 || r + 1 == this->sorted_x.size())
         {
             LOG_TRACE(log, "Iteration " << r << "/" << this->sorted_x.size());
         }
+	*/
     }
 
     for (size_t i = 0; i != this->all_edges.size(); i++)
@@ -264,7 +270,7 @@ void BucketsPolygonIndex::indexBuild(const std::vector<Polygon> & polygons)
         }
     }
 
-    LOG_TRACE(log, "Index is built, total_index_edges=" << total_index_edges);
+    // LOG_TRACE(log, "Index is built, total_index_edges=" << total_index_edges);
 }
 
 void BucketsPolygonIndex::indexAddRing(const Ring & ring, size_t polygon_id)
