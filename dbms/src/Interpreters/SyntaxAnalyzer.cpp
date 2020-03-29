@@ -791,7 +791,7 @@ void SyntaxAnalyzerResult::collectUsedColumns(const ASTPtr & query)
 
 SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     ASTPtr & query,
-    SyntaxAnalyzerResult & result,
+    const SyntaxAnalyzerResult & result,
     const SelectQueryOptions & select_options,
     const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns,
     const Names & required_result_columns) const
