@@ -791,12 +791,12 @@ void SyntaxAnalyzerResult::collectUsedColumns(const ASTPtr & query)
 
 SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     ASTPtr & query,
-    SyntaxAnalyzerResult result,
+    SyntaxAnalyzerResult && result,
     const SelectQueryOptions & select_options,
     const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns,
     const Names & required_result_columns) const
 {
-    std::cerr << "ANALYZE SELECT" << std::endl;
+    std::cerr << "ANALYZE SELECT " << serializeAST(*query) << std::endl;
     auto * select_query = query->as<ASTSelectQuery>();
     if (!select_query)
         throw Exception("Select analyze for not select asts.", ErrorCodes::LOGICAL_ERROR);

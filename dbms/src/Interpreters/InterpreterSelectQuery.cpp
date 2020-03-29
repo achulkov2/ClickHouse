@@ -150,6 +150,7 @@ String InterpreterSelectQuery::generateFilterActions(ExpressionActionsPtr & acti
     table_expr->database_and_table_name = createTableIdentifier(db_name, table_name);
     table_expr->children.push_back(table_expr->database_and_table_name);
 
+    std::cerr << "FROM FILTER" << std::endl;
     /// Using separate expression analyzer to prevent any possible alias injection
     auto syntax_result = SyntaxAnalyzer(*context).analyzeSelect(query_ast, SyntaxAnalyzerResult({}, storage));
     SelectQueryExpressionAnalyzer analyzer(query_ast, syntax_result, *context);
@@ -296,7 +297,7 @@ InterpreterSelectQuery::InterpreterSelectQuery(
 
     auto analyze = [&] (bool try_move_to_prewhere = true)
     {
-        std::cerr << "INTERPRETER SELECT QUERY" << std::endl;
+        std::cerr << "FROM INTERPRETER SELECT QUERY" << std::endl;
         syntax_analyzer_result = SyntaxAnalyzer(*context).analyzeSelect(
                 query_ptr, SyntaxAnalyzerResult(source_header.getNamesAndTypesList(), storage),
                 options, joined_tables.tablesWithColumns(), required_result_column_names);
