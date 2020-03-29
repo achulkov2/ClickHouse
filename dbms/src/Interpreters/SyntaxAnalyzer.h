@@ -91,7 +91,7 @@ public:
     /// Analyze and rewrite select query
     SyntaxAnalyzerResultPtr analyzeSelect(
         ASTPtr & query,
-        const SyntaxAnalyzerResult & result,
+        SyntaxAnalyzerResult result,
         const SelectQueryOptions & select_options = {},
         const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns = {},
         const Names & required_result_columns = {}) const;
