@@ -244,9 +244,13 @@ static const ASTTablesInSelectQueryElement * getFirstTableJoin(const ASTSelectQu
     {
         const auto & tables_element = child->as<ASTTablesInSelectQueryElement &>();
         std::cerr << "TABLE\n";
-        std::cerr << serializeAST(static_cast<IAST>(*tables_element.table_join)) << "\n";
-        std::cerr << serializeAST(static_cast<IAST>(*tables_element.table_expression)) << "\n";
-        std::cerr << serializeAST(static_cast<IAST>(*tables_element.array_join)) << std::endl;
+        if (tables_element.table_join)
+            std::cerr << serializeAST(*tables_element.table_join) << "\n";
+        if (tables_element.table_expression)
+            std::cerr << serializeAST(*tables_element.table_expression) << "\n";
+        if (tables_element.array_join)
+            std::cerr << serializeAST(*tables_element.array_join)) << "\n";
+        std::cerr << "DONE" << std::endl;
         if (tables_element.table_join)
         {
             if (!joined_table)
