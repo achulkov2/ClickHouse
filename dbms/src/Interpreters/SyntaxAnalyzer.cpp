@@ -531,6 +531,7 @@ void collectJoinedColumns(AnalyzedJoin & analyzed_join, const ASTSelectQuery & s
     const ASTTablesInSelectQueryElement * node = select_query.join();
     if (!node)
         return;
+    std::cerr << "NODE IS NOT EMPTY" << std::endl;
 
     for (const auto & table : tables)
     {
@@ -803,6 +804,11 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     auto * select_query = query->as<ASTSelectQuery>();
     if (!select_query)
         throw Exception("Select analyze for not select asts.", ErrorCodes::LOGICAL_ERROR);
+
+    if (!result.storage) {
+        if (auto db_and_table = getDatabaseAndTable(*select_query, 0))
+            result.storage = context.tryGetTable(db_and_table->database, db_and_table->table);
+    }
 
     size_t subquery_depth = select_options.subquery_depth;
     bool remove_duplicates = select_options.remove_duplicates;
