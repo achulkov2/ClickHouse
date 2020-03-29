@@ -794,6 +794,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns,
     const Names & required_result_columns) const
 {
+    std::cerr << "ANALYZE SELECT" << std::endl;
     auto * select_query = query->as<ASTSelectQuery>();
     if (!select_query)
         throw Exception("Select analyze for not select asts.", ErrorCodes::LOGICAL_ERROR);
@@ -876,6 +877,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
 
 SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyze(ASTPtr & query, const NamesAndTypesList & source_columns, StoragePtr storage) const
 {
+    std::cerr << "ANALYZE" << std::endl;
     if (query->as<ASTSelectQuery>())
         throw Exception("Not select analyze for select asts.", ErrorCodes::LOGICAL_ERROR);
 
