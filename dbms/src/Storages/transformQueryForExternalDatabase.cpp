@@ -141,7 +141,7 @@ String transformQueryForExternalDatabase(
     const String & table,
     const Context & context)
 {
-    std::cerr << "HERE\n";
+    std::cerr << "HERE" << endl;
     auto clone_query = query.clone();
     DUMP(available_columns.getNames());
     auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns);
