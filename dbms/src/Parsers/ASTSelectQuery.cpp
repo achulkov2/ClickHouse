@@ -6,6 +6,7 @@
 #include <Parsers/ASTOrderByElement.h>
 #include <Parsers/ASTTablesInSelectQuery.h>
 #include <iostream>
+#include "formatAST.h"
 
 
 namespace DB
@@ -242,6 +243,10 @@ static const ASTTablesInSelectQueryElement * getFirstTableJoin(const ASTSelectQu
     for (const auto & child : tables_in_select_query.children)
     {
         const auto & tables_element = child->as<ASTTablesInSelectQueryElement &>();
+        std::cerr << "TABLE\n";
+        std::cerr << serializeAST(static_cast<IAST>(tables_element.table_join) << "\n";
+        std::cerr << serializeAST(static_cast<IAST>(tables_element.table_expression) << "\n";
+        std::cerr << serializeAST(static_cast<IAST>(tables_element.array_join) << std::endl;
         if (tables_element.table_join)
         {
             if (!joined_table)
