@@ -825,7 +825,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
 
     std::vector<TableWithColumnNamesAndTypes> tmp;
     if (tables_with_columns.empty()) {
-        JoinedTables joined_tables(getSubqueryContext(context), select_query);
+        JoinedTables joined_tables(getSubqueryContext(context), *select_query);
         if (!joined_tables.resolveTables())
             joined_tables.makeFakeTable(result.storage, {});
         tmp = joined_tables.tablesWithColumns();
