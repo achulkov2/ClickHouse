@@ -823,11 +823,12 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
             result.storage = context.tryGetTable(db_and_table->database, db_and_table->table);
     }
 
+    std::vector<TableWithColumnNamesAndTypes> tmp;
     if (tables_with_columns.empty()) {
         JoinedTables joined_tables(getSubqueryContext(context), clone_query->as<ASTSelectQuery &>());
         if (!joined_tables.resolveTables())
             joined_tables.makeFakeTable(result.storage, {});
-        tables_with_columns = joined_tables.tablesWithColumns();
+        tmp = joined_tables.tablesWithColumns();
     }
 
     size_t subquery_depth = select_options.subquery_depth;
@@ -847,6 +848,8 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     /// TODO: Remove unneeded conversion
     std::vector<TableWithColumnNames> tables_with_column_names;
     for (const auto & table : tables_with_columns)
+        tables_with_column_names.emplace_back(table.removeTypes());
+    for (const auto & table : tmp)
         tables_with_column_names.emplace_back(table.removeTypes());
 
     for (const auto & table : tables_with_column_names)
