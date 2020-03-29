@@ -32,6 +32,7 @@
 #include <Parsers/ParserTablesInSelectQuery.h>
 #include <Parsers/parseQuery.h>
 #include <Parsers/queryToString.h>
+#include <Parsers/formatAST.h>
 
 #include <DataTypes/NestedUtils.h>
 #include <DataTypes/DataTypeNullable.h>
