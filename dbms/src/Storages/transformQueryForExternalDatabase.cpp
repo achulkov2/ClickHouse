@@ -159,8 +159,7 @@ String transformQueryForExternalDatabase(
     std::cerr << serializeAST(query) << std::endl;
     auto clone_query = query.clone();
     DUMP(available_columns.getNames());
-    JoinedTables joined_tables(getSubqueryContext(context), clone_query->as<ASTSelectQuery &>());
-    auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns, {}, joined_tables.tablesWithColumns());
+    auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns);
     std::cerr << "KEK\n";
     const Names used_columns = syntax_result->requiredSourceColumns();
 
