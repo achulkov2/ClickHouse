@@ -527,6 +527,7 @@ void setJoinStrictness(ASTSelectQuery & select_query, JoinStrictness join_defaul
 void collectJoinedColumns(AnalyzedJoin & analyzed_join, const ASTSelectQuery & select_query,
                           const std::vector<TableWithColumnNames> & tables, const Aliases & aliases)
 {
+    std::cerr << "COLLECTING JOINED COLUMNS " << serializeAST(*select_query.clone()) << std::endl;
     const ASTTablesInSelectQueryElement * node = select_query.join();
     if (!node)
         return;
