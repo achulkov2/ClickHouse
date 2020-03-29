@@ -5,6 +5,7 @@
 #include <Parsers/ASTSelectQuery.h>
 #include <Parsers/ASTOrderByElement.h>
 #include <Parsers/ASTTablesInSelectQuery.h>
+#include <iostream>
 
 
 namespace DB
@@ -225,11 +226,17 @@ static const ASTArrayJoin * getFirstArrayJoin(const ASTSelectQuery & select)
 static const ASTTablesInSelectQueryElement * getFirstTableJoin(const ASTSelectQuery & select)
 {
     if (!select.tables())
+    {
+        std::cerr << "NO TABLES" << std::endl;
         return nullptr;
+    }
 
     const auto & tables_in_select_query = select.tables()->as<ASTTablesInSelectQuery &>();
     if (tables_in_select_query.children.empty())
+    {
+        std::cerr << "NO CHILDREN" << std::endl;
         return nullptr;
+    }
 
     const ASTTablesInSelectQueryElement * joined_table = nullptr;
     for (const auto & child : tables_in_select_query.children)
