@@ -829,6 +829,12 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     for (const auto & table : tables_with_columns)
         tables_with_column_names.emplace_back(table.removeTypes());
 
+    for (const auto & table : tables_with_column_names)
+    {
+        std::cerr << "AAA TABLE\n";
+        DUMP(table.columns);
+    }
+
     if (tables_with_columns.size() > 1)
     {
         result.analyzed_join->columns_from_joined_table = tables_with_columns[1].columns;
