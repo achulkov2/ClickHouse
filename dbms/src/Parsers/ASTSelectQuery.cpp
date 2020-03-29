@@ -249,7 +249,7 @@ static const ASTTablesInSelectQueryElement * getFirstTableJoin(const ASTSelectQu
         if (tables_element.table_expression)
             std::cerr << serializeAST(*tables_element.table_expression) << "\n";
         if (tables_element.array_join)
-            std::cerr << serializeAST(*tables_element.array_join)) << "\n";
+            std::cerr << serializeAST(*tables_element.array_join) << "\n";
         std::cerr << "DONE" << std::endl;
         if (tables_element.table_join)
         {
