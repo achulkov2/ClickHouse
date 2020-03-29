@@ -639,6 +639,7 @@ void SyntaxAnalyzerResult::collectUsedColumns(const ASTPtr & query)
         source_column_names.insert(column.name);
 
     NameSet required = columns_context.requiredColumns();
+    DUMP(required);
 
     if (columns_context.has_table_join)
     {
