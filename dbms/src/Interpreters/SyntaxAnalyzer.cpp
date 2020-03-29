@@ -785,6 +785,7 @@ void SyntaxAnalyzerResult::collectUsedColumns(const ASTPtr & query)
     }
 
     required_source_columns.swap(source_columns);
+    DUMP(required_source_columns.getNames());
 }
 
 SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
