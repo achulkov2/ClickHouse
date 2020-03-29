@@ -13,6 +13,7 @@
 #include <IO/WriteBufferFromString.h>
 #include <Storages/transformQueryForExternalDatabase.h>
 #include <Storages/MergeTree/KeyCondition.h>
+#include <common/iostream_debug_helpers.h>
 
 
 namespace DB
@@ -141,7 +142,9 @@ String transformQueryForExternalDatabase(
     const Context & context)
 {
     auto clone_query = query.clone();
+    DUMP(available_columns.getNames());
     auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns);
+    std::cerr << "KEK\n";
     const Names used_columns = syntax_result->requiredSourceColumns();
 
     auto select = std::make_shared<ASTSelectQuery>();
