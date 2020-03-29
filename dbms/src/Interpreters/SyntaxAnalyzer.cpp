@@ -646,6 +646,7 @@ void SyntaxAnalyzerResult::collectUsedColumns(const ASTPtr & query)
         for (const auto & name : source_columns)
             available_columns.insert(name.name);
 
+        DUMP(analyzed_join->columnsFromJoinedTable().getNames());
         /// Add columns obtained by JOIN (if needed).
         for (const auto & joined_column : analyzed_join->columnsFromJoinedTable())
         {
