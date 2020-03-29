@@ -226,6 +226,7 @@ InterpreterSelectQuery::InterpreterSelectQuery(
     , input_pipe(std::move(input_pipe_))
     , log(&Logger::get("InterpreterSelectQuery"))
 {
+    std::cerr << "START" << std::endl;
     checkStackSize();
 
     initSettings();
