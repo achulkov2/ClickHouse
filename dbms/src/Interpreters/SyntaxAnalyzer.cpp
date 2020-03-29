@@ -41,6 +41,8 @@
 
 #include <functional>
 
+#include <common/iostream_debug_helpers.h>
+
 
 namespace DB
 {
@@ -528,6 +530,11 @@ void collectJoinedColumns(AnalyzedJoin & analyzed_join, const ASTSelectQuery & s
     if (!node)
         return;
 
+    for (const auto & table : tables)
+    {
+        DUMP(table.columns);
+        DUMP(table.hidden_columns);
+    }
     const auto & table_join = node->table_join->as<ASTTableJoin &>();
 
     if (table_join.using_expression_list)
