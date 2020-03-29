@@ -14,6 +14,8 @@
 #include <Storages/transformQueryForExternalDatabase.h>
 #include <Storages/MergeTree/KeyCondition.h>
 #include <common/iostream_debug_helpers.h>
+#include <Interpreters/JoinedTables.h>
+#include <Parsers/formatAST.h>
 
 
 namespace DB
@@ -132,6 +134,18 @@ bool isCompatible(const IAST & node)
 
 }
 
+static Context getSubqueryContext(const Context & context)
+{
+    Context subquery_context = context;
+    Settings subquery_settings = context.getSettings();
+    subquery_settings.max_result_rows = 0;
+    subquery_settings.max_result_bytes = 0;
+    /// The calculation of extremes does not make sense and is not necessary (if you do it, then the extremes of the subquery can be taken for whole query).
+    subquery_settings.extremes = false;
+    subquery_context.setSettings(subquery_settings);
+    return subquery_context;
+}
+
 
 String transformQueryForExternalDatabase(
     const IAST & query,
@@ -142,9 +156,11 @@ String transformQueryForExternalDatabase(
     const Context & context)
 {
     std::cerr << "HERE" << std::endl;
+    std::cerr << serializeAST(query) << std::endl;
     auto clone_query = query.clone();
     DUMP(available_columns.getNames());
-    auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns);
+    JoinedTables joined_tables(getSubqueryContext(context), clone_query->as<ASTSelectQuery &>());
+    auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns, {}, joined_tables.tablesWithColumns());
     std::cerr << "KEK\n";
     const Names used_columns = syntax_result->requiredSourceColumns();
 
