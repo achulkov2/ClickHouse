@@ -93,7 +93,7 @@ public:
         ASTPtr & query,
         SyntaxAnalyzerResult && result,
         const SelectQueryOptions & select_options = {},
-        std::vector<TableWithColumnNamesAndTypes> tables_with_columns = {},
+        const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns = {},
         const Names & required_result_columns = {}) const;
 
 private:

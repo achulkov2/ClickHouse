@@ -802,7 +802,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     ASTPtr & query,
     SyntaxAnalyzerResult && result,
     const SelectQueryOptions & select_options,
-    std::vector<TableWithColumnNamesAndTypes> tables_with_columns,
+    const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns,
     const Names & required_result_columns) const
 {
     std::cerr << "analyzeSelect on query: " << serializeAST(*query) << std::endl;
@@ -810,18 +810,6 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     auto * select_query = query->as<ASTSelectQuery>();
     if (!select_query)
         throw Exception("Select analyze for not select asts.", ErrorCodes::LOGICAL_ERROR);
-
-    if (!result.storage) {
-        if (auto db_and_table = getDatabaseAndTable(*select_query, 0))
-            result.storage = context.tryGetTable(db_and_table->database, db_and_table->table);
-    }
-
-    if (tables_with_columns.empty()) {
-        JoinedTables joined_tables(getSubqueryContext(context), *select_query);
-        if (!joined_tables.resolveTables())
-            joined_tables.makeFakeTable(result.storage, {});
-        tables_with_columns = joined_tables.tablesWithColumns();
-    }
 
     size_t subquery_depth = select_options.subquery_depth;
     bool remove_duplicates = select_options.remove_duplicates;

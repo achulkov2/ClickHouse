@@ -135,7 +135,7 @@ bool isCompatible(const IAST & node)
 }
 
 String transformQueryForExternalDatabase(
-    const IAST & query,
+    const SelectQueryInfo & query_info,
     const NamesAndTypesList & available_columns,
     IdentifierQuotingStyle identifier_quoting_style,
     const String & database,
@@ -143,9 +143,8 @@ String transformQueryForExternalDatabase(
     const Context & context)
 {
     std::cerr << "FROM TRANSFORM" << std::endl;
-    auto clone_query = query.clone();
-    auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns);
-    const Names used_columns = syntax_result->requiredSourceColumns();
+    auto clone_query = query_info.query->clone();
+    const Names used_columns = query_info.syntax_analyzer_result->requiredSourceColumns();
 
     auto select = std::make_shared<ASTSelectQuery>();
 
