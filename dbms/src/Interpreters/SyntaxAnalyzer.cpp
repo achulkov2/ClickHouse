@@ -806,6 +806,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     const Names & required_result_columns) const
 {
     std::cerr << "analyzeSelect on query: " << serializeAST(*query) << std::endl;
+    DUMP(result.source_columns);
     auto * select_query = query->as<ASTSelectQuery>();
     if (!select_query)
         throw Exception("Select analyze for not select asts.", ErrorCodes::LOGICAL_ERROR);
