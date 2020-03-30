@@ -809,7 +809,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     ASTPtr & query,
     SyntaxAnalyzerResult && result,
     const SelectQueryOptions & select_options,
-    const std::vector<TableWithColumnNamesAndTypes> & tables_with_columns,
+    std::vector<TableWithColumnNamesAndTypes> tables_with_columns,
     const Names & required_result_columns) const
 {
     std::cerr << "ANALYZE SELECT " << serializeAST(*query) << std::endl;
@@ -828,7 +828,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
         JoinedTables joined_tables(getSubqueryContext(context), *select_query);
         if (!joined_tables.resolveTables())
             joined_tables.makeFakeTable(result.storage, {});
-        tmp = joined_tables.tablesWithColumns();
+        tables_with_columns = joined_tables.tablesWithColumns();
     }
 
     size_t subquery_depth = select_options.subquery_depth;
@@ -848,8 +848,6 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     /// TODO: Remove unneeded conversion
     std::vector<TableWithColumnNames> tables_with_column_names;
     for (const auto & table : tables_with_columns)
-        tables_with_column_names.emplace_back(table.removeTypes());
-    for (const auto & table : tmp)
         tables_with_column_names.emplace_back(table.removeTypes());
 
     for (const auto & table : tables_with_column_names)
