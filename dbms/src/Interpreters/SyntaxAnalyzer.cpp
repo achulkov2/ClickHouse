@@ -528,17 +528,10 @@ void setJoinStrictness(ASTSelectQuery & select_query, JoinStrictness join_defaul
 void collectJoinedColumns(AnalyzedJoin & analyzed_join, const ASTSelectQuery & select_query,
                           const std::vector<TableWithColumnNames> & tables, const Aliases & aliases)
 {
-    std::cerr << "COLLECTING JOINED COLUMNS " << serializeAST(*select_query.clone()) << std::endl;
     const ASTTablesInSelectQueryElement * node = select_query.join();
     if (!node)
         return;
-    std::cerr << "NODE IS NOT EMPTY" << std::endl;
 
-    for (const auto & table : tables)
-    {
-        DUMP(table.columns);
-        DUMP(table.hidden_columns);
-    }
     const auto & table_join = node->table_join->as<ASTTableJoin &>();
 
     if (table_join.using_expression_list)
@@ -812,8 +805,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     std::vector<TableWithColumnNamesAndTypes> tables_with_columns,
     const Names & required_result_columns) const
 {
-    std::cerr << "ANALYZE SELECT " << serializeAST(*query) << std::endl;
-    DUMP(result.source_columns.getNames());
+    std::cerr << "analyzeSelect on query: " << serializeAST(*query) << std::endl;
     auto * select_query = query->as<ASTSelectQuery>();
     if (!select_query)
         throw Exception("Select analyze for not select asts.", ErrorCodes::LOGICAL_ERROR);
@@ -823,7 +815,6 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
             result.storage = context.tryGetTable(db_and_table->database, db_and_table->table);
     }
 
-    std::vector<TableWithColumnNamesAndTypes> tmp;
     if (tables_with_columns.empty()) {
         JoinedTables joined_tables(getSubqueryContext(context), *select_query);
         if (!joined_tables.resolveTables())
@@ -849,12 +840,6 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
     std::vector<TableWithColumnNames> tables_with_column_names;
     for (const auto & table : tables_with_columns)
         tables_with_column_names.emplace_back(table.removeTypes());
-
-    for (const auto & table : tables_with_column_names)
-    {
-        std::cerr << "AAA TABLE\n";
-        DUMP(table.columns);
-    }
 
     if (tables_with_columns.size() > 1)
     {
@@ -915,7 +900,7 @@ SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyzeSelect(
 
 SyntaxAnalyzerResultPtr SyntaxAnalyzer::analyze(ASTPtr & query, const NamesAndTypesList & source_columns, StoragePtr storage) const
 {
-    std::cerr << "ANALYZE" << std::endl;
+    std::cerr << "analyze on query: " << serializeAST(*query) << std::endl;
     if (query->as<ASTSelectQuery>())
         throw Exception("Not select analyze for select asts.", ErrorCodes::LOGICAL_ERROR);
 

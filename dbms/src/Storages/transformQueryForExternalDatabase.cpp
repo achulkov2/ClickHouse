@@ -142,12 +142,9 @@ String transformQueryForExternalDatabase(
     const String & table,
     const Context & context)
 {
-    std::cerr << "HERE" << std::endl;
-    std::cerr << serializeAST(query) << std::endl;
+    std::cerr << "FROM TRANSFORM" << std::endl;
     auto clone_query = query.clone();
-    DUMP(available_columns.getNames());
     auto syntax_result = SyntaxAnalyzer(context).analyzeSelect(clone_query, available_columns);
-    std::cerr << "KEK\n";
     const Names used_columns = syntax_result->requiredSourceColumns();
 
     auto select = std::make_shared<ASTSelectQuery>();

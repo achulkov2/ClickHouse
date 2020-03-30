@@ -227,30 +227,16 @@ static const ASTArrayJoin * getFirstArrayJoin(const ASTSelectQuery & select)
 static const ASTTablesInSelectQueryElement * getFirstTableJoin(const ASTSelectQuery & select)
 {
     if (!select.tables())
-    {
-        std::cerr << "NO TABLES" << std::endl;
         return nullptr;
-    }
 
     const auto & tables_in_select_query = select.tables()->as<ASTTablesInSelectQuery &>();
     if (tables_in_select_query.children.empty())
-    {
-        std::cerr << "NO CHILDREN" << std::endl;
         return nullptr;
-    }
 
     const ASTTablesInSelectQueryElement * joined_table = nullptr;
     for (const auto & child : tables_in_select_query.children)
     {
         const auto & tables_element = child->as<ASTTablesInSelectQueryElement &>();
-        std::cerr << "TABLE\n";
-        if (tables_element.table_join)
-            std::cerr << "TJ " << serializeAST(*tables_element.table_join) << "\n";
-        if (tables_element.table_expression)
-            std::cerr << "TE " << serializeAST(*tables_element.table_expression) << "\n";
-        if (tables_element.array_join)
-            std::cerr << "AJ " << serializeAST(*tables_element.array_join) << "\n";
-        std::cerr << "DONE" << std::endl;
         if (tables_element.table_join)
         {
             if (!joined_table)
