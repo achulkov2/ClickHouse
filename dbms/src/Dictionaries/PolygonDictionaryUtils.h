@@ -109,7 +109,7 @@ public:
     BucketsPolygonIndex(const std::vector<Polygon> & polygons);
 
     /** Finds polygon id the same way as IPolygonIndex. */
-    bool find(const Point & point, size_t & id, size_t * checked_edges) const;
+    bool find(const Point & point, size_t & id, size_t * checked_edges = nullptr) const;
 
 private:
     /** Returns unique x coordinates among all points. */
