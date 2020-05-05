@@ -189,6 +189,10 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
             }
             ++qqq;
             checked_edges.fetch_add(ce);
+            auto val = max.load();
+            while (ce > val && !max.compare_exchange_weak(val, ce)) {
+            }
+
             if (found)
                 break;
         }
