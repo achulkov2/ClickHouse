@@ -82,6 +82,7 @@ private:
     static constexpr size_t kMaxDepth = 5;
 
     mutable std::atomic_size_t checked_edges = 0;
+    mutable std::atomic_size_t qqq = 0;
 };
 
 /** Uses single BucketsPolygonIndex for all queries. */

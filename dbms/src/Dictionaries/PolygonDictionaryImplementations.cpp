@@ -148,7 +148,7 @@ std::shared_ptr<const IExternalLoadable> SmartPolygonDictionary::clone() const
 bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
 {
     auto log = &Logger::get("BucketsPolygonIndex");
-    auto average = static_cast<long double>(checked_edges.load()) / getQueryCount();
+    auto average = static_cast<long double>(checked_edges.load()) / qqq.load();
     LOG_TRACE(log, "Average number of edges checked: " << average);
     /*
     bool found = false;
@@ -171,22 +171,28 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
     */
     bool found = false;
     auto cell = grid.find(point.get<0>(), point.get<1>());
-    size_t ce = 0;
     if (cell)
     {
         for (size_t i = 0; i < (cell->polygon_ids).size(); ++i)
         {
             const auto & candidate = (cell->polygon_ids)[i];
             size_t unused = 0;
-            if ((cell->is_covered_by)[i] || buckets[candidate].find(point, unused, &ce))
+            if ((cell->is_covered_by)[i])
             {
                 found = true;
                 id = candidate;
-                break;
             }
+            size_t ce = 0;
+            if (buckets[candidate].find(point, unused, &ce)) {
+                found = true;
+                id = candidate;
+            }
+            ++qqq;
+            checked_edges.fetch_add(ce);
+            if (found)
+                break;
         }
     }
-    checked_edges.fetch_add(ce);
     return found;
 }
 
