@@ -147,12 +147,9 @@ std::shared_ptr<const IExternalLoadable> SmartPolygonDictionary::clone() const
 
 bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
 {
-    size_t qc;
-    if ((qc = getQueryCount()) % 10000 == 0) {
-        auto log = &Logger::get("BucketsPolygonIndex");
-        auto average = static_cast<long double>(checked_edges.load()) / qc;
-        LOG_TRACE(log, "Average number of edges checked: " << average);
-    }
+    auto log = &Logger::get("BucketsPolygonIndex");
+    auto average = static_cast<long double>(checked_edges.load()) / getQueryCount();
+    LOG_TRACE(log, "Average number of edges checked: " << average);
     /*
     bool found = false;
     double area = 0;
