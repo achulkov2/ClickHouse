@@ -149,7 +149,7 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
 {
     auto log = &Logger::get("BucketsPolygonIndex");
     auto average = static_cast<long double>(checked_edges.load()) / qqq.load();
-    LOG_TRACE(log, "Average number of edges checked: " << average);
+    LOG_TRACE(log, "Average number of edges checked: " << average << " " << max.load());
     /*
     bool found = false;
     double area = 0;
