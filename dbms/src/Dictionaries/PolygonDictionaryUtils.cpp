@@ -328,9 +328,8 @@ bool BucketsPolygonIndex::Edge::compare2(const Edge & a, const Edge & b)
     return a.polygon_id < b.polygon_id;
 }
 
-bool BucketsPolygonIndex::find(const Point & point, size_t & id) const
+bool BucketsPolygonIndex::find(const Point & point, size_t & id, size_t * checked_edges = nullptr) const
 {
-
     /** TODO: maybe we should check for vertical line? */
     if (this->sorted_x.size() < 2)
     {
@@ -415,8 +414,9 @@ bool BucketsPolygonIndex::find(const Point & point, size_t & id) const
         }
     }
 
-    ++queries;
-    checked_edges.fetch_add(incr);
+    if (checked_edges) {
+        *checked_edges = incr;
+    }
     return found;
 }
 

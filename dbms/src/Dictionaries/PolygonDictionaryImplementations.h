@@ -80,6 +80,8 @@ private:
     GridRoot grid;
     static constexpr size_t kMinIntersections = 1;
     static constexpr size_t kMaxDepth = 5;
+
+    mutable std::atomic_size_t checked_edges = 0;
 };
 
 /** Uses single BucketsPolygonIndex for all queries. */
