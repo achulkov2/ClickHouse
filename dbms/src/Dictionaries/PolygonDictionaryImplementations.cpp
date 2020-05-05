@@ -190,7 +190,7 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
             }
             ++qqq;
             checked_edges.fetch_add(ce);
-            if (ce > 10) {
+            if (ce > 5) {
                 ++big;
             }
 
