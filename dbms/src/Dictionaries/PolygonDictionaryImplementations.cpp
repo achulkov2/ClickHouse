@@ -126,12 +126,10 @@ SmartPolygonDictionary::SmartPolygonDictionary(
         return areas[lhs] < areas[rhs];
     });
     grid.init(order);
-    auto log = &Logger::get("BucketsPolygonIndex");
     buckets.reserve(polygons.size());
     for (size_t i = 0; i < polygons.size(); ++i)
     {
         buckets.emplace_back(std::vector<Polygon>{polygons[i]});
-        LOG_TRACE(log, "Finished polygon" << i);
     }
 }
 
@@ -149,6 +147,17 @@ std::shared_ptr<const IExternalLoadable> SmartPolygonDictionary::clone() const
 
 bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
 {
+    if (getQueryCount() % 10000 == 0) {
+        auto log = &Logger::get("BucketsPolygonIndex");
+        size_t total_checked_edges = 0;
+        size_t total_queries = 0;
+        for (const auto & bucket : buckets) {
+            total_checked_edges += bucket.checked_edges;
+            total_queries += bucket.queries;
+        }
+        auto average = static_cast<long double>(total_checked_edges) / total_queries;
+        LOG_TRACE(log, "Average number of edges checked: " << average);
+    }
     /*
     bool found = false;
     double area = 0;

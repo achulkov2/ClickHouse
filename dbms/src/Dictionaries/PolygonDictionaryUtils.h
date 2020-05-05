@@ -111,6 +111,9 @@ public:
     /** Finds polygon id the same way as IPolygonIndex. */
     bool find(const Point & point, size_t & id) const;
 
+    mutable std::atomic_size_t checked_edges = 0;
+    mutable std::atomic_size_t queries = 0;
+
 private:
     /** Returns unique x coordinates among all points. */
     std::vector<Float64> uniqueX(const std::vector<Polygon> & polygons);
