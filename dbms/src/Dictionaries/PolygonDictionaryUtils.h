@@ -107,7 +107,6 @@ public:
     /** Finds polygon id the same way as IPolygonIndex. */
     bool find(const Point & point, size_t & id) const;
 
-private:
     /** Returns unique x coordinates among all points. */
     std::vector<Float64> uniqueX(const std::vector<Polygon> & polygons);
 
@@ -136,6 +135,8 @@ private:
     /** Sorted distinct coordinates of all vertexes. */
     std::vector<Float64> sorted_x;
     std::vector<Edge> all_edges;
+
+private:
 
     /** Edges from all polygons, classified by sorted_x borders.
      *  edges_index[i] stores all interesting edges in range ( sorted_x[i]; sorted_x[i + 1] ]

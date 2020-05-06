@@ -175,8 +175,38 @@ OneBucketPolygonDictionary::OneBucketPolygonDictionary(
     InputType input_type_,
     PointType point_type_)
     : IPolygonDictionary(database_, name_, dict_struct_, std::move(source_ptr_), dict_lifetime_, input_type_, point_type_),
-      buckets_idx(this->polygons)
+      buckets_idxs()
 {
+    assert(this->polygons.size() > 0);
+
+    size_t n = this->polygons.size();
+    std::vector<Float64> polygon_min_y(n, std::numeric_limits<Float64>::max());
+    std::vector<Float64> polygon_max_y(n, std::numeric_limits<Float64>::min());
+    BucketsPolygonIndex all_idx(this->polygons);
+    for (const auto & edge : all_idx.all_edges)
+    {
+        size_t id = edge.polygon_id;
+        polygon_min_y[id] = std::min({polygon_min_y[id], edge.l.y(), edge.r.y()});
+        polygon_max_y[id] = std::max({polygon_max_y[id], edge.l.y(), edge.r.y()});
+    }
+    this->min_y = *std::min_element(polygon_min_y.begin(), polygon_min_y.end());
+    this->max_y = *std::max_element(polygon_max_y.begin(), polygon_max_y.end());
+    this->step = (this->max_y - this->min_y) / kLinesCount;
+
+    for (size_t i = 0; i < kLinesCount; ++i)
+    {
+        Float64 current_min = this->min_y + this->step * i;
+        Float64 current_max = this->max_y - this->step * (kLinesCount - 1 - i);
+        std::vector<Polygon> current;
+        for (size_t j = 0; j < n; ++j)
+        {
+            if (std::max(current_min, polygon_min_y[j]) <= std::min(current_max, polygon_max_y[j]))
+            {
+                current.emplace_back(this->polygons[j]);
+            }
+        }
+        this->buckets_idxs.emplace_back(current);
+    }
 }
 
 std::shared_ptr<const IExternalLoadable> OneBucketPolygonDictionary::clone() const
@@ -193,7 +223,16 @@ std::shared_ptr<const IExternalLoadable> OneBucketPolygonDictionary::clone() con
 
 bool OneBucketPolygonDictionary::find(const Point & point, size_t & id) const
 {
-    return this->buckets_idx.find(point, id);
+    if (point.y() < this->min_y || point.y() > this->max_y)
+    {
+        return false;
+    }
+    size_t pos = (point.y() - this->min_y) / this->step;
+    if (pos >= this->buckets_idxs.size())
+    {
+        pos = this->buckets_idxs.size() - 1;
+    }
+    return this->buckets_idxs[pos].find(point, id);
 }
 
 template <class PolygonDictionary>

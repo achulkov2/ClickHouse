@@ -100,7 +100,12 @@ public:
 private:
     bool find(const Point & point, size_t & id) const override;
 
-    BucketsPolygonIndex buckets_idx;
+    std::vector<BucketsPolygonIndex> buckets_idxs;
+    Float64 min_y;
+    Float64 max_y;
+    Float64 step;
+
+    static constexpr size_t kLinesCount = 200;
 };
 
 }
