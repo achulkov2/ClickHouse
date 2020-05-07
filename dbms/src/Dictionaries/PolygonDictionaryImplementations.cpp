@@ -165,6 +165,7 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
             if ((cell->is_covered_by)[i] || buckets[candidate].find(point))
             {
                 id = candidate;
+                last = cell;
                 return true;
             }
         }
