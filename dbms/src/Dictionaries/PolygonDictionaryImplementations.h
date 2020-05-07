@@ -101,6 +101,7 @@ private:
     bool find(const Point & point, size_t & id) const override;
 
     std::vector<BucketsPolygonIndex> buckets_idxs;
+    std::vector<std::vector<size_t>> id_maps;
     Float64 min_y;
     Float64 max_y;
     Float64 step;

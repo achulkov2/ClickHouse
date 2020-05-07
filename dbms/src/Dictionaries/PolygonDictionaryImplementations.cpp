@@ -198,14 +198,17 @@ OneBucketPolygonDictionary::OneBucketPolygonDictionary(
         Float64 current_min = this->min_y + this->step * i;
         Float64 current_max = this->max_y - this->step * (kLinesCount - 1 - i);
         std::vector<Polygon> current;
+        std::vector<size_t> id_map;
         for (size_t j = 0; j < n; ++j)
         {
             if (std::max(current_min, polygon_min_y[j]) <= std::min(current_max, polygon_max_y[j]))
             {
                 current.emplace_back(this->polygons[j]);
+                id_map.push_back(j);
             }
         }
         this->buckets_idxs.emplace_back(current);
+        id_maps.push_back(id_map);
     }
 }
 
@@ -232,7 +235,11 @@ bool OneBucketPolygonDictionary::find(const Point & point, size_t & id) const
     {
         pos = this->buckets_idxs.size() - 1;
     }
-    return this->buckets_idxs[pos].find(point, id);
+    if (!this->buckets_idxs[pos].find(point, id)) {
+        return false;
+    }
+    id = id_maps[pos][id];
+    return true;
 }
 
 template <class PolygonDictionary>
