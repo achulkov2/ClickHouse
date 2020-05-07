@@ -63,10 +63,10 @@ std::unique_ptr<ICell> GridRoot::makeCell(Float64 current_min_x, Float64 current
     {
         return !bg::intersects(current_box, polygons[id]);
     }), possible_ids.end());
-    ++depth;
     const auto & cnt = possible_ids.size();
     if (cnt <= kMinIntersections || (cnt < depth * 2 && depth >= kMaxDepth))
         return std::make_unique<FinalCell>(possible_ids, polygons, current_box);
+    ++depth;
     auto x_shift = (current_max_x - current_min_x) / kSplit;
     auto y_shift = (current_max_y - current_min_y) / kSplit;
     std::vector<std::unique_ptr<ICell>> children;
