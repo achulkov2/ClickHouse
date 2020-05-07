@@ -145,17 +145,18 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
     }
     return found;
     */
-    static thread_local size_t last_i = 0;
-    static thread_local const FinalCell * last_cell = nullptr;
-    if (last_cell) {
-        const auto & candidate = (last_cell->polygon_ids)[last_i];
-        if ((last_cell->is_covered_by)[last_i] || buckets[candidate].find(point))
-        {
-            id = candidate;
-            return true;
+    static thread_local const FinalCell * last = nullptr;
+    const FinalCell * cell = nullptr;
+    if (last) {
+        const auto & mnc = (last->box).min_corner();
+        const auto & mxc = (last->box).max_corner();
+        if (mnc.x() <= point.x() && point.x() < mxc.x() && mnc.y() <= point.y() && point.y() < mxc.y()) {
+            cell = last;
         }
     }
-    auto cell = grid.find(point.get<0>(), point.get<1>());
+    if (!cell)
+        cell = grid.find(point.get<0>(), point.get<1>());
+
     if (cell)
     {
         for (size_t i = 0; i < (cell->polygon_ids).size(); ++i)
@@ -164,8 +165,6 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
             if ((cell->is_covered_by)[i] || buckets[candidate].find(point))
             {
                 id = candidate;
-                last_i = i;
-                last_cell = cell;
                 return true;
             }
         }

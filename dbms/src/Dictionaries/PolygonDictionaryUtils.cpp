@@ -12,7 +12,7 @@ namespace DB
 {
 
 FinalCell::FinalCell(std::vector<size_t> polygon_ids_, const std::vector<Polygon> & polygons_, const Box & box_):
-polygon_ids(std::move(polygon_ids_))
+polygon_ids(std::move(polygon_ids_)), box(box_)
 {
     Polygon tmp_poly;
     bg::convert(box_, tmp_poly);
