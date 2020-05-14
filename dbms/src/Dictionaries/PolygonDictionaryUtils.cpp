@@ -26,14 +26,14 @@ polygon_ids(std::move(polygon_ids_))
     Polygon tmp_poly{};
     bg::convert(box_, tmp_poly);
     covered_by.resize(polygon_ids.size());
-    std::transform(polygon_ids.begin(), polygon_ids.end(), covered_by, [&](const auto id)
+    std::transform(polygon_ids.begin(), polygon_ids.end(), covered_by.begin(), [&](const auto id)
     {
         return bg::covered_by(tmp_poly, polygons_[id]);
     });
     small_box = getSmallBox(box_);
     bg::convert(small_box, tmp_poly);
     small_box_covered_by.resize(polygon_ids.size());
-    std::transform(polygon_ids.begin(), polygon_ids.end(), small_box_covered_by, [&](const auto id)
+    std::transform(polygon_ids.begin(), polygon_ids.end(), small_box_covered_by.begin(), [&](const auto id)
     {
         return bg::covered_by(tmp_poly, polygons_[id]);
     });
