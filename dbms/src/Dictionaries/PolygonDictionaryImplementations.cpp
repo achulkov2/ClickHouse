@@ -124,6 +124,16 @@ std::shared_ptr<const IExternalLoadable> SmartPolygonDictionary::clone() const
             this->point_type);
 }
 
+inline bool isValueInRange(Coord val, Coord left, Coord right)
+{
+    return left <= val && val <= right;
+}
+
+inline bool isPointInBox(const Point & point, const Box & box)
+{
+    return isValueInRange(point.x(), box.min_corner().x(), box.max_corner().x()) && isValueInRange(point.y(), box.min_corner().y(), box.max_corner().x());
+}
+
 bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
 {
     /*
@@ -152,7 +162,9 @@ bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
         for (size_t i = 0; i < (cell->polygon_ids).size(); ++i)
         {
             const auto & candidate = (cell->polygon_ids)[i];
-            if ((cell->is_covered_by)[i] || buckets[candidate].find(point))
+            if ((cell->covered_by)[i] ||
+                ((cell->small_box_covered_by)[i] && isPointInBox(point, cell->small_box)) ||
+                buckets[candidate].find(point))
             {
                 found = true;
                 id = candidate;

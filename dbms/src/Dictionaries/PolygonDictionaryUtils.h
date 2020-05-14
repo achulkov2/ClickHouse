@@ -45,7 +45,9 @@ class FinalCell : public ICell
 public:
     explicit FinalCell(std::vector<size_t> polygon_ids_, const std::vector<Polygon> & polygons_, const Box & box_);
     std::vector<size_t> polygon_ids;
-    std::vector<uint8_t> is_covered_by;
+    std::vector<uint8_t> covered_by;
+    Box small_box;
+    std::vector<uint8_t> small_box_covered_by;
 
 private:
     [[nodiscard]] const FinalCell * find(Coord x, Coord y) const override;

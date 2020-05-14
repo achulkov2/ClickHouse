@@ -11,12 +11,29 @@
 namespace DB
 {
 
+inline Box getSmallBox(const Box & box)
+{
+    auto mdx = (box.min_corner().x() + box.max_corner().x()) / 2;
+    auto mdy = (box.min_corner().y() + box.max_corner().y()) / 2;
+    auto hdx = (box.max_corner().x() - box.min_corner().x()) / 2;
+    auto hdy = (box.max_corner().y() - box.min_corner().y()) / 2;
+    return {Point(mdx - hdx, mdy - hdy), Point(mdx + hdx, mdy + hdy)};
+}
+
 FinalCell::FinalCell(std::vector<size_t> polygon_ids_, const std::vector<Polygon> & polygons_, const Box & box_):
 polygon_ids(std::move(polygon_ids_))
 {
-    Polygon tmp_poly;
+    Polygon tmp_poly{};
     bg::convert(box_, tmp_poly);
-    std::transform(polygon_ids.begin(), polygon_ids.end(), std::back_inserter(is_covered_by), [&](const auto id)
+    covered_by.resize(polygon_ids.size());
+    std::transform(polygon_ids.begin(), polygon_ids.end(), covered_by, [&](const auto id)
+    {
+        return bg::covered_by(tmp_poly, polygons_[id]);
+    });
+    small_box = getSmallBox(box_);
+    bg::convert(small_box, tmp_poly);
+    small_box_covered_by.resize(polygon_ids.size());
+    std::transform(polygon_ids.begin(), polygon_ids.end(), small_box_covered_by, [&](const auto id)
     {
         return bg::covered_by(tmp_poly, polygons_[id]);
     });
