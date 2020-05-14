@@ -131,7 +131,7 @@ inline bool isValueInRange(Coord val, Coord left, Coord right)
 
 inline bool isPointInBox(const Point & point, const Box & box)
 {
-    return isValueInRange(point.x(), box.min_corner().x(), box.max_corner().x()) && isValueInRange(point.y(), box.min_corner().y(), box.max_corner().x());
+    return isValueInRange(point.x(), box.min_corner().x(), box.max_corner().x()) && isValueInRange(point.y(), box.min_corner().y(), box.max_corner().y());
 }
 
 bool SmartPolygonDictionary::find(const Point & point, size_t & id) const
