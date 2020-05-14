@@ -83,7 +83,7 @@ bool GridPolygonDictionary::find(const Point &point, size_t & id) const
         for (size_t i = 0; i < (cell->polygon_ids).size(); ++i)
         {
             const auto & candidate = (cell->polygon_ids)[i];
-            if ((cell->is_covered_by)[i] || bg::covered_by(point, polygons[candidate]))
+            if ((cell->covered_by)[i] || bg::covered_by(point, polygons[candidate]))
             {
                 found = true;
                 id = candidate;
