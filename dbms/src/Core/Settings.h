@@ -372,6 +372,8 @@ struct Settings : public SettingsCollection<Settings>
     \
     M(SettingBool, experimental_use_processors, true, "Use processors pipeline.", 0) \
     \
+    M(SettingBool, allow_experimental_polygon_dictionaries, false, "Allow polygon dictionaries. Their names and features are not finalized yet.", 0) \
+    \
     M(SettingBool, allow_hyperscan, true, "Allow functions that use Hyperscan library. Disable to avoid potentially long compilation times and excessive resource usage.", 0) \
     M(SettingBool, allow_simdjson, true, "Allow using simdjson library in 'JSON*' functions if AVX2 instructions are available. If disabled rapidjson will be used.", 0) \
     M(SettingBool, allow_introspection_functions, false, "Allow functions for introspection of ELF and DWARF for query profiling. These functions are slow and may impose security considerations.", 0) \

@@ -23,6 +23,20 @@ void DictionaryFactory::registerLayout(const std::string & layout_type, Creator 
 
 }
 
+void DictionaryFactory::registerLayout(const std::string & layout_type, CreatorWithoutContext create_layout, bool is_complex)
+{
+    auto create_layout_context = [=](const std::string & name,
+                                     const DictionaryStructure & dict_struct,
+                                     const Poco::Util::AbstractConfiguration & config,
+                                     const std::string & config_prefix,
+                                     const Context &,
+                                     DictionarySourcePtr source_ptr) -> DictionaryPtr
+    {
+        return create_layout(name, dict_struct, config, config_prefix, std::move(source_ptr));
+    };
+
+    registerLayout(layout_type, std::move(create_layout_context), is_complex);
+}
 
 DictionaryPtr DictionaryFactory::create(
     const std::string & name,
@@ -49,7 +63,7 @@ DictionaryPtr DictionaryFactory::create(
         if (found != registered_layouts.end())
         {
             const auto & layout_creator = found->second;
-            return layout_creator(name, dict_struct, config, config_prefix, std::move(source_ptr));
+            return layout_creator(name, dict_struct, config, config_prefix, context, std::move(source_ptr));
         }
     }
 

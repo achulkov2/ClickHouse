@@ -50,11 +50,20 @@ public:
         const DictionaryStructure & dict_struct,
         const Poco::Util::AbstractConfiguration & config,
         const std::string & config_prefix,
+        const Context & context,
+        DictionarySourcePtr source_ptr)>;
+
+    using CreatorWithoutContext = std::function<DictionaryPtr(
+        const std::string & name,
+        const DictionaryStructure & dict_struct,
+        const Poco::Util::AbstractConfiguration & config,
+        const std::string & config_prefix,
         DictionarySourcePtr source_ptr)>;
 
     bool isComplex(const std::string & layout_type) const;
 
     void registerLayout(const std::string & layout_type, Creator create_layout, bool is_complex);
+    void registerLayout(const std::string & layout_type, CreatorWithoutContext create_layout, bool is_complex);
 
 private:
     using LayoutRegistry = std::unordered_map<std::string, Creator>;

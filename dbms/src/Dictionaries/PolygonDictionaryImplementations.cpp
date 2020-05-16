@@ -1,6 +1,7 @@
 #include "PolygonDictionaryImplementations.h"
 #include "DictionaryFactory.h"
 
+#include <Interpreters/Context.h>
 #include <DataTypes/DataTypeArray.h>
 #include <DataTypes/DataTypeTuple.h>
 #include <DataTypes/DataTypesNumber.h>
@@ -11,6 +12,11 @@
 
 namespace DB
 {
+
+namespace ErrorCodes
+{
+    extern const int SUPPORT_IS_DISABLED;
+}
 
 SimplePolygonDictionary::SimplePolygonDictionary(
         const std::string & database_,
@@ -201,8 +207,12 @@ DictionaryPtr createLayout(const std::string &,
                            const DictionaryStructure & dict_struct,
                            const Poco::Util::AbstractConfiguration & config,
                            const std::string & config_prefix,
+                           const Context & context,
                            DictionarySourcePtr source_ptr)
 {
+    if (!context.getSettingsRef().allow_experimental_polygon_dictionaries)
+        throw Exception("Experimental polygon dictionary feature is not enabled (the setting 'allow_experimental_polygon_dictionaries')", ErrorCodes::SUPPORT_IS_DISABLED);
+
     const String database = config.getString(config_prefix + ".database", "");
     const String name = config.getString(config_prefix + ".name");
 
