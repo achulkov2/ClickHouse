@@ -93,6 +93,9 @@ private:
       *  placing it into O(log n) nodes of this tree.
       */
     std::vector<std::vector<EdgeLine>> edges_index_tree;
+
+    std::vector<EdgeLine> flat_edges_index_tree;
+    std::vector<size_t> index_edges_index_tree;
 };
 
 template <class ReturnCell>

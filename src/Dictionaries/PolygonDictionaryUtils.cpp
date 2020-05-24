@@ -188,6 +188,13 @@ void SlabsPolygonIndex::indexBuild(const std::vector<Polygon> & polygons)
         }
     }
 
+    index_edges_index_tree.emplace_back(0);
+    for (size_t i = 0; i < edges_index_tree.size(); ++i)
+    {
+        flat_edges_index_tree.insert(flat_edges_index_tree.end(), edges_index_tree[i].begin(), edges_index_tree[i].end());
+        index_edges_index_tree.emplace_back(flat_edges_index_tree.size());
+    }
+
     LOG_TRACE(log, "Polygon index is built, total_index_edges=" << total_index_edges);
 }
 
@@ -311,9 +318,13 @@ bool SlabsPolygonIndex::find(const Point & point, size_t & id) const
     pos += this->edges_index_tree.size() / 2;
     do
     {
+        size_t from = index_edges_index_tree[pos];
+        size_t to = index_edges_index_tree[pos+1];
+
         /** Iterating over interesting edges */
-        for (const auto & edge : this->edges_index_tree[pos])
+        for (size_t i = from; i != to; ++i)
         {
+            const auto & edge = this->flat_edges_index_tree[i];
             /** Check if point lies above the edge */
             if (x * edge.k + edge.b <= y)
                 intersections.emplace_back(edge.polygon_id);
