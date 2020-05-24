@@ -297,6 +297,9 @@ bool SlabsPolygonIndex::find(const Point & point, size_t & id) const
 
     bool found = false;
 
+    size_t min_id = -1;
+    bool parity = false;
+
     /** Point is considired inside when ray down from point crosses odd number of edges.
       * This vector will contain polygon ids of all crosses. Smallest id with odd number of
       * occurrences is the answer.
@@ -316,10 +319,34 @@ bool SlabsPolygonIndex::find(const Point & point, size_t & id) const
         {
             /** Check if point lies above the edge */
             if (x * edge.k + edge.b <= y)
-                intersections.emplace_back(edge.polygon_id);
+            {
+                if (edge.polygon_id == min_id)
+                {
+                    parity ^= true;
+                }
+                else if (edge.polygon_id < min_id)
+                {
+                    if (parity)
+                    {
+                        intersections.emplace_back(min_id);
+                    }
+                    min_id = edge.polygon_id;
+                    parity = true;
+                }
+                else
+                {
+                    intersections.emplace_back(edge.polygon_id);
+                }
+            }
         }
         pos >>= 1;
     } while (pos != 0);
+
+    if (parity)
+    {
+        id = min_id;
+        return true;
+    }
 
     /** Sort all ids and find smallest with odd occurrences */
     std::sort(intersections.begin(), intersections.end());
